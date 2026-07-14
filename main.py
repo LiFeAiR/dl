@@ -5,7 +5,7 @@ import fighting
 
 
 def main():
-    parser = argparse.ArgumentParser(description='dl plaing bot')
+    parser = argparse.ArgumentParser(description='dl playing bot')
     parser.add_argument("-j", "--job", help="Job type")
     parser.add_argument("-a", "--account", help="Account name")
     args = parser.parse_args()
