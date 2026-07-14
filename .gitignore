@@ -1,0 +1,7 @@
+# IDE
+.idea
+.vscode
+
+config.yaml
+fish_test_data.txt
+fish_test_raw.txt
