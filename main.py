@@ -2,7 +2,7 @@ import argparse, os, sys, yaml
 
 import fishing
 import fighting
-
+import party
 
 def main():
     parser = argparse.ArgumentParser(description='dl playing bot')
@@ -26,9 +26,10 @@ def main():
     jobs = {
         "fighting": fighting.main,
         "fishing": fishing.main,
+        "party": party.main,
     }
 
-    jobs.get(args.job, lambda: "Job type must be fighting or fishing")(name, api_id, api_hash)
+    jobs.get(args.job, lambda: "Undefined job type")(name, api_id, api_hash)
 
 
 if __name__ == '__main__':

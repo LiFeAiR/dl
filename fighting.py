@@ -8,7 +8,7 @@ def main(name, api_id, api_hash):
     client = TelegramClient(name, api_id, api_hash)
 
     @client.on(events.NewMessage(chats='@ForestSpirits_bot', incoming=True))
-    async def my_message_edited(event):
+    async def my_new_message(event):
         # print(f"{event.raw_text}")
         if event.raw_text == "Начинается бой!":
             global NPP
