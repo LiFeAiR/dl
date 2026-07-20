@@ -23,4 +23,14 @@ accounts:
 * Совместная атака на мобов
     * `python dl/main.py -j party -a _some_name_`
 * Различные калькуляторы
-  * `python calc.py`
+  * `python calc.py` [пример](example.md)
+  ```
+  1 |  Подсчет рыбы 
+  2 |  Подсчет рыбы (прогресс)                                                                                                                                                                                   
+  0 |  Выход  
+                                                                                                                                                                                                     
+  ┌─[Выбери]                                                                                                                                                                                                       
+  ├──(1/2/./0)-[~/Settings]                                                                                                                                                                                        
+  └─$ 0                                                                                                                                                                                                            
+  ℹ️  Exit
+```

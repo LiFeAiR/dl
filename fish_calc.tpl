@@ -1,15 +1,18 @@
 📊 Подсчёт рыбы:
 {% for key, stat in stats.items() -%}
 {% if key == "huge" -%}
-Огромная³: {{ stat.count }} шт. = {{ stat.total }}
+    {% set key_title = "Огромная³" -%}
 {% elif key == "big" -%}
-Большая²: {{ stat.count }} шт. = {{ stat.total }}
+    {% set key_title = "Большая²" -%}
 {% elif key == "small" -%}
-Мелкая¹: {{ stat.count }} шт. = {{ stat.total }}
+    {% set key_title = "Мелкая¹" -%}
 {% endif -%}
-{% for item in calc[key] -%}
+{% if key != "all" -%}
+{{ key_title }}: {{ stat.count }} шт. = {{ stat.total }}
+{% for key1, item in calc[key].items() -%}
 └ {{item.name}}x{{item.count}}
 {% endfor -%}
+{% endif -%}
 {% endfor %}
 🐟 Всего рыбы: {{stats.all.count}} шт.
 💰 Общая стоимость: {{stats.all.total}}

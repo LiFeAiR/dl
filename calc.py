@@ -32,16 +32,21 @@ def main():
     while True:
         menu = (
             f"  {LIGHT_YELLOW}1 | {YELLOW} Подсчет рыбы \n"
+            f"  {LIGHT_YELLOW}2 | {YELLOW} Подсчет рыбы (прогресс) \n"
             f"  {LIGHT_YELLOW}0 | {YELLOW} Выход \n"
         )
 
         print(menu)
 
-        # /2/3/4/5/6/7/8/9/l/g/a/f/./0
-        choice = input(kali('1./0', '~/Settings', "Выбери"))
+        # /3/4/5/6/7/8/9/l/g/a/f/./0
+        choice = input(kali('1/2/./0', '~/Settings', "Выбери"))
         if choice == '1':
             print(f"ℹ️  Подсчет рыбы:\n")
             fish_calc()
+
+        elif choice == '2':
+            print(f"ℹ️  Подсчет рыбы - разница:\n")
+            fish_calc_two()
 
         elif choice == '0':
             print(f"ℹ️  Exit")
@@ -50,9 +55,8 @@ def main():
             print(f"ℹ️  NO_SUCH_OPTION")
 
 
-def fish_calc():
-    global ENV
-    print("Enter/Paste your content. Ctrl-D or Ctrl-Z ( windows ) to save it.")
+def get_message(prefix):
+    print(f"{prefix}\nEnter/Paste your content. Ctrl-D or Ctrl-Z ( windows ) to save it.")
     messages = []
     while True:
         try:
@@ -62,13 +66,16 @@ def fish_calc():
         messages.append(line)
 
     message = "\n".join(messages) + "\n"
+    return message
 
+
+def calc_stats_fish(message):
     pattern = r'i_\d+ .*\(\d+\)'
     results = re.findall(pattern, message)
     calc = {
-        "huge": [],
-        "big": [],
-        "small": [],
+        "huge": {},
+        "big": {},
+        "small": {},
     }
     stats = {
         "huge": {"count": 0, "total": 0},
@@ -81,16 +88,18 @@ def fish_calc():
         pattern = r'(i_\d+) (.*)\((\d+)\)'
         m = re.match(pattern, result)
         # print(m[3])
-        item = {"name": m[2], "count": m[3]}
+        name = m[2]
+        count = int(m[3])
+        item = {"name": name, "count": count}
         if "Огромн" in result:
-            calc["huge"].append(item)
-            stats["huge"]["count"] += int(item["count"])
+            calc["huge"][name] = item
+            stats["huge"]["count"] += count
         elif "Больш" in result:
-            calc["big"].append(item)
-            stats["big"]["count"] += int(item["count"])
+            calc["big"][name] = item
+            stats["big"]["count"] += count
         elif "Мелк" in result:
-            calc["small"].append(item)
-            stats["small"]["count"] += int(item["count"])
+            calc["small"][name] = item
+            stats["small"]["count"] += count
 
     stats["small"]["total"] = stats["small"]["count"] * 200
     stats["big"]["total"] = stats["big"]["count"] * 300
@@ -99,10 +108,46 @@ def fish_calc():
     stats["all"]["total"] = stats["small"]["total"] + stats["big"]["total"] + stats["huge"]["total"]
     stats["all"]["count"] = stats["small"]["count"] + stats["big"]["count"] + stats["huge"]["count"]
 
-    template = ENV.get_template("calc.tpl")
+    return calc, stats
+
+
+def fish_calc():
+    global ENV
+    message = get_message("")
+
+    calc, stats = calc_stats_fish(message)
+
+    template = ENV.get_template("fish_calc.tpl")
     output = '\n' + '─' * 50 + '\n'
 
     output += template.render(calc=calc, stats=stats)
+
+    output += '\n' + '─' * 50 + '\n'
+
+    print(output)
+
+
+def fish_calc_two():
+    message = get_message("Message1:")
+    calc, stats = calc_stats_fish(message)
+    message1 = get_message("Message2:")
+    calc1, stats1 = calc_stats_fish(message1)
+
+    template = ENV.get_template("fish_calc.tpl")
+
+    output = '\n' + '─' * 50 + '\n'
+    output += '\n' + '─' * 20 + "Message1" + '─' * 20 + '\n'
+
+    output += template.render(calc=calc, stats=stats)
+
+    output += '\n' + '─' * 20 + "Message2" + '─' * 20 + '\n'
+
+    output += template.render(calc=calc1, stats=stats1)
+
+    output += '\n' + '─' * 20 + "Diff" + '─' * 20 + '\n'
+
+    template = ENV.get_template("fish_calc_two.tpl")
+    output += template.render(calc=calc, calc1=calc1, stats=stats, stats1=stats1)
 
     output += '\n' + '─' * 50 + '\n'
 
