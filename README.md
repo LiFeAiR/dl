@@ -20,3 +20,7 @@ accounts:
     * `python dl/main.py -j fishing -a _some_name_`
 * Атака
     * `python dl/main.py -j fighting -a _some_name_`
+* Совместная атака на мобов
+    * `python dl/main.py -j party -a _some_name_`
+* Различные калькуляторы
+  * `python calc.py`
