@@ -133,6 +133,51 @@ def fish_calc_two():
     message1 = get_message("Message2:")
     calc1, stats1 = calc_stats_fish(message1)
 
+    diff_stats = {}
+    diff_calc = {}
+
+    for key, item in stats1.items():
+        d = {"cur": item}
+        if key in stats:
+            d["prev"] = stats[key]
+        else:
+            d["prev"] = {"count": 0, "total": 0}
+
+        d["diff"] = {
+            "count": d["cur"]["count"] - d["prev"]["count"],
+            "total": d["cur"]["total"] - d["prev"]["total"]
+        }
+        diff_stats[key] = d
+        if key in calc1:
+            diff_calc[key] = {}
+            for key1, item in calc1[key].items():
+                d = {"name": key1, "cur": item["count"], "prev": 0}
+                if key in calc:
+                    if key1 in calc[key]:
+                        d["prev"] = calc[key][key1]["count"]
+                d["diff"] = d["cur"] - d["prev"]
+                diff_calc[key][key1] = d
+
+    for key, item in stats.items():
+        if key not in diff_stats:
+            d = {"prev": item}
+            d["cur"] = {"count": 0, "total": 0}
+            d["diff"] = {
+                "count": d["cur"]["count"] - d["prev"]["count"],
+                "total": d["cur"]["total"] - d["prev"]["total"]
+            }
+            diff_stats[key] = d
+            if key in calc:
+                diff_calc[key] = {}
+                for key1, item in calc[key].items():
+                    d = {"name": key1, "cur": 0, "prev": 0}
+                    if key1 in calc[key]:
+                        d["prev"] = calc[key][key1].count
+
+                    d["diff"] = d["cur"] - d["prev"]
+                    diff_calc[key][key1] = d
+
+
     template = ENV.get_template("fish_calc.tpl")
 
     output = '\n' + '─' * 50 + '\n'
@@ -146,13 +191,14 @@ def fish_calc_two():
 
     output += '\n' + '─' * 20 + "Diff" + '─' * 20 + '\n'
 
-    template = ENV.get_template("fish_calc_two.tpl")
-    output += template.render(calc=calc, calc1=calc1, stats=stats, stats1=stats1)
+    # template = ENV.get_template("fish_calc_two.tpl")
+    # output += template.render(calc=calc, calc1=calc1, stats=stats, stats1=stats1)
+    template = ENV.get_template("fish_calc_diff.tpl")
+    output += template.render(calc=diff_calc, stats=diff_stats)
 
     output += '\n' + '─' * 50 + '\n'
 
     print(output)
-
 
 if __name__ == '__main__':
     main()
