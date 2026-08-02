@@ -86,7 +86,7 @@ def check_fish(event):
     return click
 
 
-def main(name, api_id, api_hash):
+def main(name="", api_id="", api_hash=""):
     client = TelegramClient(name, api_id, api_hash)
 
     @client.on(events.NewMessage(chats='@ForestSpirits_bot', incoming=True))

@@ -22,6 +22,9 @@ accounts:
     * `python dl/main.py -j fighting -a _some_name_`
 * Совместная атака на мобов
     * `python dl/main.py -j party -a _some_name_`
+* Питомцы
+    * 😸Погладить: `python dl/main.py -j terrarium -a _some_name_ -o stroke`
+    * 🐾Прогулка: `python dl/main.py -j terrarium -a _some_name_ -o stroll`
 * Различные калькуляторы
   * `python calc.py` [пример](example.md)
   ```

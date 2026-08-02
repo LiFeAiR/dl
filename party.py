@@ -15,8 +15,9 @@ def init_fs(message):
     for result in results:
         fight_stats[result] = {"max": 0, "total": 0}
 
+    fight_stats["enemy"] = message.splitlines()[-1]
     # print(stats)
-    # print(fight_stats)
+    print(fight_stats)
 
 
 def parse_step(message):
@@ -33,10 +34,10 @@ def parse_step(message):
 
             fight_stats[player]["total"] += int(result)
 
-    # print(fight_stats)
+    print(fight_stats)
 
 
-def main(name, api_id, api_hash):
+def main(name="", api_id="", api_hash=""):
     client = TelegramClient(name, api_id, api_hash)
 
     @client.on(events.NewMessage(chats='@ForestSpirits_bot', incoming=True))
@@ -47,6 +48,7 @@ def main(name, api_id, api_hash):
             print(stats)
             stats = {"fights": []}
         if event.raw_text == "Группа вступает в бой!":
+            # print(fight_stats)
             if len(fight_stats) > 0:
                 stats["fights"].append(fight_stats)
                 fight_stats = {}
