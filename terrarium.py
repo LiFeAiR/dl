@@ -23,11 +23,8 @@ def main(name="", api_id="", api_hash="", options=[]):
         if "Кормушка" in message:
             if "stroke" in options:
                 utils.sleep()
-                pattern = r'(/t\d+_\d+) (.*)🟢\d+'
+                pattern = r'(/t\d+_\d+) (.*)\d+'
                 results = re.findall(pattern, message)
-                if len(results) == 0:
-                    print(message)
-                    print("!!! НЕТ зеленых !!!")
                 for result in results:
                     print(result)
                     utils.sleep(1000, 3000)
@@ -45,7 +42,7 @@ def main(name="", api_id="", api_hash="", options=[]):
                         idx += 1
 
                 if click:
-                    utils.sleep(1000, 3000)
+                    utils.sleep(2000, 4000)
                     await event.click(clkIdx)
                 else:
                     print(message)
