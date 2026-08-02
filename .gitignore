@@ -3,6 +3,8 @@
 .vscode
 
 config.yaml
-fish_test_data.txt
-fish_test_raw.txt
-fights_raw.json
+data/fish_test_data.txt
+data/fish_test_raw.txt
+data/fights_raw.json
+data/fishings.json
+data/list.csv

@@ -1,9 +1,12 @@
 import re
+import csv
+import json
+
 from jinja2 import Environment, FileSystemLoader
 from constants import *
 
 # Указываем папку с шаблонами
-ENV = Environment(loader=FileSystemLoader('.'))
+ENV = Environment(loader=FileSystemLoader('./tpl'))
 
 
 def kali(variants=None, menu=None, text=None):
@@ -33,13 +36,14 @@ def main():
         menu = (
             f"  {LIGHT_YELLOW}1 | {YELLOW} Подсчет рыбы \n"
             f"  {LIGHT_YELLOW}2 | {YELLOW} Подсчет рыбы (прогресс) \n"
+            f"  {LIGHT_YELLOW}3 | {YELLOW} Подсчет рыбы (таблица) \n"
             f"  {LIGHT_YELLOW}0 | {YELLOW} Выход \n"
         )
 
         print(menu)
 
         # /3/4/5/6/7/8/9/l/g/a/f/./0
-        choice = input(kali('1/2/./0', '~/Settings', "Выбери"))
+        choice = input(kali('1/2/3/./0', '~/Settings', "Выбери"))
         if choice == '1':
             print(f"ℹ️  Подсчет рыбы:\n")
             fish_calc()
@@ -47,6 +51,10 @@ def main():
         elif choice == '2':
             print(f"ℹ️  Подсчет рыбы - разница:\n")
             fish_calc_two()
+
+        elif choice == '3':
+            print(f"ℹ️  Подсчет рыбы - таблица:\n")
+            fish_calc_table()
 
         elif choice == '0':
             print(f"ℹ️  Exit")
@@ -177,7 +185,6 @@ def fish_calc_two():
                     d["diff"] = d["cur"] - d["prev"]
                     diff_calc[key][key1] = d
 
-
     template = ENV.get_template("fish_calc.tpl")
 
     output = '\n' + '─' * 50 + '\n'
@@ -199,6 +206,58 @@ def fish_calc_two():
     output += '\n' + '─' * 50 + '\n'
 
     print(output)
+
+
+MAP = {"huge": "Огромная³", "big": "Большая²", "small": "Мелкая¹", "all": "Всего"}
+
+
+def fish_calc_table():
+    global MAP
+    filename = './data/fishings.json'
+    with open(filename) as ii:
+        data = json.load(ii)
+
+    with open('./data/list.csv', 'w') as file:
+        csv_writer = csv.writer(file)
+        fields = ["Улов"]
+        for date in data:
+            fields.append(date)
+
+        csv_writer.writerow(fields)
+
+        ss = {"huge": [], "big": [], "small": [], "all": []}
+        cc = {"huge": {}, "big": {}, "small": {}}
+        for day, value in data.items():
+            message = value
+            calc, stats = calc_stats_fish(message)
+            for key in stats:
+                ss[key].append(stats[key])
+                if key in cc:
+                    for name in calc[key]:
+                        if cc[key].get(name) is None:
+                            cc[key][name] = {day: calc[key][name]["count"]}
+                        else:
+                            cc[key][name][day] = calc[key][name]["count"]
+
+        for key in ss:
+            row = [MAP[key] + ' штуки']
+            row1 = [MAP[key] + ' цена']
+            for item in ss[key]:
+                row.append(item["count"])
+                row1.append(item["total"])
+            if key != "all":
+                for name in cc[key]:
+                    row2 = [name]
+                    for day in data:
+                        if day in cc[key][name]:
+                            row2.append(cc[key][name][day])
+                        else:
+                            row2.append(0)
+                    csv_writer.writerow(row2)
+
+            csv_writer.writerow(row)
+            csv_writer.writerow(row1)
+
 
 if __name__ == '__main__':
     main()
