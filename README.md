@@ -53,6 +53,7 @@ accounts:
 
 * Статитстика стай
   * `python dl/swarms.py`
+  
 ![s1.png](s1.png)
 ![s2.png](s2.png)
 ![s3.png](s3.png)
