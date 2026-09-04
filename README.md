@@ -50,3 +50,10 @@ accounts:
   "02.08.2026": "_инвентарь_"
 }
 ```
+
+* Статитстика стай
+  * `python dl/swarms.py`
+![s1.png](s1.png)
+![s2.png](s2.png)
+![s3.png](s3.png)
+![s4.png](s4.png)
